@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/root">
+        <file>stave.png</file>
+    </qresource>
+</RCC>

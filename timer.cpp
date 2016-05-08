@@ -40,11 +40,10 @@ void MainWindow::onAudioWritten()
 		double requestFreq = pitchToFrequency(info.pitch.first());
 
 		auto maxIter = std::max_element(fftResult.begin() + 3, fftResult.end());
-		qDebug() << requestFreq << maxIter - fftResult.begin();
 		int maxFrequency = (maxIter - fftResult.begin()) * audio->format().sampleRate() / targetLength;
 		int requestIndex = requestFreq * targetLength / audio->format().sampleRate();
 		setWindowTitle(QString::number(maxFrequency) + "Hz");
-		if(maxIter - fftResult.begin() == requestIndex && *maxIter >= 10)
+		if (maxIter - fftResult.begin() == requestIndex && *maxIter >= 10)
 		{
 			gameBeginTime.start();
 			score += 1.;
@@ -57,8 +56,7 @@ void MainWindow::onAudioWritten()
 		auto maxIter = std::max_element(fftResult.begin() + 3, fftResult.end());
 		int maxFrequency = (maxIter - fftResult.begin()) * audio->format().sampleRate() / targetLength;
 		setWindowTitle(QString::number(maxFrequency) + "Hz");
-		qDebug() << frequencyToPitch(maxFrequency);
-		if(frequencyToPitch(maxFrequency) == info.pitch.at(int(score)))
+		if (int(score) < info.pitch.length() && frequencyToPitch(maxFrequency) == info.pitch.at(int(score)))
 		{
 			score += 1.;
 		}

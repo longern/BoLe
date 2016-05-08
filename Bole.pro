@@ -23,13 +23,19 @@ SOURCES += main.cpp \
     mainwindow.cpp \
     timer.cpp \
     render.cpp \
-    init.cpp
+    init.cpp \
+    formplay.cpp
 
 HEADERS  += \
     fft.h \
     audioin.h \
     readnote.h \
     songinfo.h \
-    mainwindow.h
+    mainwindow.h \
+    formplay.h
 
-FORMS    +=
+FORMS    += \
+    formplay.ui
+
+RESOURCES += \
+    resource.qrc

@@ -5,7 +5,7 @@
 bool NoteReader::readNotes(const QString &filename, SongInfo &info)
 {
 	QFile songInfoFile(filename);
-	if(songInfoFile.open(QIODevice::ReadOnly))
+	if (songInfoFile.open(QIODevice::ReadOnly))
 	{
 		QTextStream ts(&songInfoFile);
 		double bpm;
@@ -14,10 +14,12 @@ bool NoteReader::readNotes(const QString &filename, SongInfo &info)
 
 		info.pitch.clear();
 		info.timeline.clear();
-		while(!ts.atEnd())
+		while (true)
 		{
 			int pitch, time;
 			ts >> pitch >> time;
+			if (ts.atEnd())
+				break;
 			info.pitch.append(pitch);
 			info.timeline.append(time);
 		}

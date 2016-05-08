@@ -20,6 +20,7 @@ protected:
 	void paintEvent(QPaintEvent *);
 
 private:
+	QWidget *formPlay;
 	AudioIn *audio;
 	SongInfo info;
 	QTime gameBeginTime;

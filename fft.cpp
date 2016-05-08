@@ -48,5 +48,5 @@ void fft(std::vector<std::complex<double> > &y, int len, int on)
 	}
 	if (on == -1)
 		for (int i = 0; i < len; i++)
-			y[i].real() = y[i].real() / len;
+			y[i].real(y[i].real() / len);
 }
