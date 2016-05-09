@@ -1,0 +1,35 @@
+html, body
+{
+    margin: 0;
+    padding: 0;
+}
+
+body
+{
+    background: black;
+    font-family: 'Fantique Four';
+    font-size: 40px;
+    cursor: default;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+}
+
+#screen
+{
+    position:relative;
+    width: 1280px;
+    height: 800px;
+    left: 50%;
+    top: 50%;
+    margin-left: -640px;
+    margin-top: -400px;
+    background: url("background.jpg");
+    background-size: cover;
+    transform: scale(0.95);
+}
+
+#screen *
+{
+    position: absolute;
+}
