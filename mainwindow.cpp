@@ -15,3 +15,11 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 	audio = new AudioIn;
 	connect(audio, SIGNAL(audioWritten()), this, SLOT(onAudioWritten()));
 }
+
+void MainWindow::keyPressEvent(QKeyEvent *ev)
+{
+	if (ev->key() == Qt::Key_Space)
+		score = 0.;
+	else
+		QWidget::keyPressEvent(ev);
+}
