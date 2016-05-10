@@ -36,6 +36,7 @@ Makefile*
 # VS-es
 
 .vs
+*.sln
 
 # =========================
 # Operating System Files
