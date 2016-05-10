@@ -3,13 +3,17 @@ navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia 
 
 var audioCtx = new AudioContext();
 var analyser = audioCtx.createAnalyser();
-analyser.fftSize = 2048;
+analyser.fftSize = 1024;
 
 var msPerBeat = 60000 / 118.;
 
 function ellapseTime() {
     var endTime = new Date().getTime();
     return endTime - gameBeginTime;
+}
+
+function indexToFrequency(index) {
+    return index * analyser.fftSize * audioCtx.sampleRate;
 }
 
 function drawLines() {
@@ -45,6 +49,7 @@ function timerEvent() {
     bufferLength = analyser.frequencyBinCount;
     fftDataArray = new Float32Array(bufferLength);
     analyser.getFloatFrequencyData(fftDataArray);
+    document.title = Math.round(indexToFrequency(fftDataArray.indexOf(Math.max.apply(null, fftDataArray)))) + " Hz";
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
