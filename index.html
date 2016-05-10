@@ -2,10 +2,14 @@
 <head>
     <meta charset="utf-8" />
     <title>BoLe</title>
+    <script>
+        if (document.location.protocol != "https:" && document.location.protocol != "file:")
+            document.location = "https://" + document.location.hostname + document.location.pathname;
+    </script>
     <script src="bole.js"></script>
     <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body oncontextmenu="return false;">
     <div id="screen">
         <div style="left:0; top:100px; width:1280px; text-align:center;">Song Title</div>
         <img style="left:0px; top:440px" width="1280" src="stave.png" />
