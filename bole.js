@@ -13,7 +13,7 @@ function ellapseTime() {
 }
 
 function indexToFrequency(index) {
-    return index * analyser.fftSize * audioCtx.sampleRate;
+    return index * audioCtx.sampleRate / analyser.fftSize;
 }
 
 function drawLines() {
