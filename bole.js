@@ -5,7 +5,8 @@ var audioCtx = new AudioContext();
 var analyser = audioCtx.createAnalyser();
 analyser.fftSize = 1024;
 
-var msPerBeat = 60000 / 118.;
+var msPerBeat = 60000 / 105.;
+var musicScore = [[-3, 0], [-1, 1], [0, 2], [4, 3], [9, 4], [-3, 8], [-1, 9], [0, 10], [4, 11], [9, 12], [14, 16], [12, 17], [11, 18], [12, 19], [9, 20], [-3, 24], [-1, 25], [0, 26], [4, 27], [9, 28], [-3, 32], [-1, 33], [0, 34], [4, 35], [9, 36], [14, 48], [12, 49], [11, 50], [12, 51], [9, 52]];
 
 function ellapseTime() {
     var endTime = new Date().getTime();
@@ -34,6 +35,8 @@ function drawLines() {
 }
 
 function renderGame() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
     drawLines();
 
     ctx.beginPath();
@@ -45,16 +48,16 @@ function renderGame() {
     ctx.fill();
 }
 
-function timerEvent() {
+function analyseAudio() {
     bufferLength = analyser.frequencyBinCount;
     fftDataArray = new Float32Array(bufferLength);
     analyser.getFloatFrequencyData(fftDataArray);
     document.title = Math.round(indexToFrequency(fftDataArray.indexOf(Math.max.apply(null, fftDataArray)))) + " Hz";
+}
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+function timerEvent() {
+    analyseAudio();
     renderGame();
-
     setTimeout(timerEvent, 0);
 }
 
