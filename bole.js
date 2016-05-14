@@ -4,10 +4,11 @@ navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia 
 var audioCtx = new AudioContext();
 var analyser = audioCtx.createAnalyser();
 var ctx = null;
-analyser.fftSize = 1024;
+analyser.fftSize = 2048;
 
 var msPerBeat = 60000 / 110.;
 var musicScore = [[-3, 2], [-1, 2.5], [0, 3], [4, 3.5], [9, 4], [-3, 6], [-1, 6.5], [0, 7], [4, 7.5], [9, 8], [14, 10], [12, 10.5], [11, 11], [12, 11.5], [9, 12], [-3, 18], [-1, 18.5], [0, 19], [4, 19.5], [9, 20], [-3, 22], [-1, 22.5], [0, 23], [4, 23.5], [9, 24], [14, 26], [12, 26.5], [11, 27], [12, 27.5], [9, 28]];
+var notePlayRecord = [];
 var gameScore = 0;
 
 // Global Functions
@@ -18,6 +19,11 @@ function ellapseTime() {
 
 function indexToFrequency(index) {
     return index * audioCtx.sampleRate / analyser.fftSize;
+}
+
+function frequencyToPitch(frequency)
+{
+	return Math.round(Math.log2(frequency / 440) * 12.);
 }
 
 function pitchToScoreLine(pitch) {
@@ -70,7 +76,17 @@ function analyseAudio() {
     var bufferLength = analyser.frequencyBinCount;
     fftDataArray = new Float32Array(bufferLength);
     analyser.getFloatFrequencyData(fftDataArray);
-    document.title = Math.round(indexToFrequency(fftDataArray.indexOf(Math.max.apply(null, fftDataArray)))) + " Hz";
+    var maxFrequency = indexToFrequency(fftDataArray.indexOf(Math.max.apply(null, fftDataArray)));
+    document.title = Math.round(maxFrequency) + " Hz";
+
+    var currentBeatCount = ellapseTime() / msPerBeat;
+    for (note in musicScore)
+        if (Math.abs(musicScore[note][1] - currentBeatCount) <= 0.1 &&
+            frequencyToPitch(maxFrequency) == musicScore[note][0] &&
+            !notePlayRecord[note]) {
+            notePlayRecord[note] = true;
+            gameScore += 1;
+        }
 }
 
 // Main Loop
@@ -93,6 +109,7 @@ window.onload = function () {
 window.onkeydown = function (event) {
     switch (event.which) {
         case 13:
+            notePlayRecord = [];
             gameBeginTime = new Date().getTime();
             timerEvent();
             break;
