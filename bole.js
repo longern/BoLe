@@ -8,7 +8,7 @@ analyser.fftSize = 1024;
 
 var msPerBeat = 60000 / 110.;
 var musicScore = [[-3, 2], [-1, 2.5], [0, 3], [4, 3.5], [9, 4], [-3, 6], [-1, 6.5], [0, 7], [4, 7.5], [9, 8], [14, 10], [12, 10.5], [11, 11], [12, 11.5], [9, 12], [-3, 18], [-1, 18.5], [0, 19], [4, 19.5], [9, 20], [-3, 22], [-1, 22.5], [0, 23], [4, 23.5], [9, 24], [14, 26], [12, 26.5], [11, 27], [12, 27.5], [9, 28]];
-var gameScore = 0.;
+var gameScore = 0;
 
 // Global Functions
 function ellapseTime() {
@@ -61,6 +61,8 @@ function renderGame() {
         var barLine = Math.floor(barCount) % 4 >= 2;
         drawNote(230 + 460 * (barCount - Math.floor(barCount / 2) * 2), 249 + 260 * barLine - pitchToScoreLine(musicScore[note][0]) * 7);
     }
+
+    document.getElementById("scorelabel").innerText = gameScore;
 }
 
 // Logic Functions
