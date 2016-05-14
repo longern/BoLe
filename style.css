@@ -7,7 +7,7 @@ html, body
 body
 {
     background: black;
-    font-family: 'Fantique Four';
+    font-family: 'Fantique Four', 'Lucida Handwriting';
     font-size: 40px;
     cursor: default;
     -ms-user-select: none;

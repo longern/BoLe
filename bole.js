@@ -6,7 +6,7 @@ var analyser = audioCtx.createAnalyser();
 var ctx = null;
 analyser.fftSize = 1024;
 
-var msPerBeat = 60000 / 105.;
+var msPerBeat = 60000 / 110.;
 var musicScore = [[-3, 2], [-1, 2.5], [0, 3], [4, 3.5], [9, 4], [-3, 6], [-1, 6.5], [0, 7], [4, 7.5], [9, 8], [14, 10], [12, 10.5], [11, 11], [12, 11.5], [9, 12], [-3, 18], [-1, 18.5], [0, 19], [4, 19.5], [9, 20], [-3, 22], [-1, 22.5], [0, 23], [4, 23.5], [9, 24], [14, 26], [12, 26.5], [11, 27], [12, 27.5], [9, 28]];
 var gameScore = 0.;
 
@@ -65,7 +65,7 @@ function renderGame() {
 
 // Logic Functions
 function analyseAudio() {
-    bufferLength = analyser.frequencyBinCount;
+    var bufferLength = analyser.frequencyBinCount;
     fftDataArray = new Float32Array(bufferLength);
     analyser.getFloatFrequencyData(fftDataArray);
     document.title = Math.round(indexToFrequency(fftDataArray.indexOf(Math.max.apply(null, fftDataArray)))) + " Hz";
@@ -85,7 +85,14 @@ window.onload = function () {
     navigator.getUserMedia({ audio: true }, function (stream) {
         var microphone = audioCtx.createMediaStreamSource(stream);
         microphone.connect(analyser);
-        gameBeginTime = new Date().getTime();
-        timerEvent();
     }, function () { });
+}
+
+window.onkeydown = function (event) {
+    switch (event.which) {
+        case 13:
+            gameBeginTime = new Date().getTime();
+            timerEvent();
+            break;
+    }
 }
