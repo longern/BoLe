@@ -7,7 +7,7 @@ var ctx = null;
 analyser.fftSize = 1024;
 
 var msPerBeat = 60000 / 105.;
-var musicScore = [[-3, 0], [-1, 1], [0, 2], [4, 3], [9, 4], [-3, 8], [-1, 9], [0, 10], [4, 11], [9, 12], [14, 16], [12, 17], [11, 18], [12, 19], [9, 20], [-3, 24], [-1, 25], [0, 26], [4, 27], [9, 28], [-3, 32], [-1, 33], [0, 34], [4, 35], [9, 36], [14, 48], [12, 49], [11, 50], [12, 51], [9, 52]];
+var musicScore = [[-3, 2], [-1, 2.5], [0, 3], [4, 3.5], [9, 4], [-3, 6], [-1, 6.5], [0, 7], [4, 7.5], [9, 8], [14, 10], [12, 10.5], [11, 11], [12, 11.5], [9, 12], [-3, 18], [-1, 18.5], [0, 19], [4, 19.5], [9, 20], [-3, 22], [-1, 22.5], [0, 23], [4, 23.5], [9, 24], [14, 26], [12, 26.5], [11, 27], [12, 27.5], [9, 28]];
 var gameScore = 0.;
 
 // Global Functions
@@ -18,6 +18,10 @@ function ellapseTime() {
 
 function indexToFrequency(index) {
     return index * audioCtx.sampleRate / analyser.fftSize;
+}
+
+function pitchToScoreLine(pitch) {
+    return Math.round(pitch / 12. * 7.);
 }
 
 // Render Functions
@@ -49,8 +53,14 @@ function renderGame() {
 
     drawLines();
 
-    drawNote(460, 264);
-    drawNote(632, 235);
+    currentBeatCount = ellapseTime() / msPerBeat;
+    for (note in musicScore) {
+        if (musicScore[note][1] < currentBeatCount - 0.1 || musicScore[note][1] >= currentBeatCount + 15)
+            continue;
+        var barCount = musicScore[note][1] / 4.;
+        var barLine = Math.floor(barCount) % 4 >= 2;
+        drawNote(230 + 460 * (barCount - Math.floor(barCount / 2) * 2), 249 + 260 * barLine - pitchToScoreLine(musicScore[note][0]) * 7);
+    }
 }
 
 // Logic Functions
