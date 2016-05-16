@@ -4,7 +4,10 @@ navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia 
 var audioCtx = new AudioContext();
 var analyser = audioCtx.createAnalyser();
 var ctx = null;
+analyser.minDecibels = -90;
+analyser.maxDecibels = -10;
 analyser.fftSize = 2048;
+analyser.smoothingTimeConstant = 0.1;
 
 var msPerBeat = 60000 / 110.;
 var musicScore = [[-3, 2], [-1, 2.5], [0, 3], [4, 3.5], [9, 4], [-3, 6], [-1, 6.5], [0, 7], [4, 7.5], [9, 8], [14, 10], [12, 10.5], [11, 11], [12, 11.5], [9, 12], [-3, 18], [-1, 18.5], [0, 19], [4, 19.5], [9, 20], [-3, 22], [-1, 22.5], [0, 23], [4, 23.5], [9, 24], [14, 26], [12, 26.5], [11, 27], [12, 27.5], [9, 28]];
@@ -23,7 +26,7 @@ function indexToFrequency(index) {
 
 function frequencyToPitch(frequency)
 {
-	return Math.round(Math.log2(frequency / 440) * 12.);
+	return Math.round(Math.log2(frequency / 440) * 12.) - 3;
 }
 
 function pitchToScoreLine(pitch) {
@@ -38,11 +41,13 @@ function drawNote(x, y) {
 }
 
 function drawLines() {
+    ctx.lineWidth = 2;
     for (var i = 0; i < 3; i++) {
         for (var j = 0; j < 2; j++) {
             ctx.beginPath();
             ctx.moveTo(230 + 460 * i, 200 + 260 * j);
             ctx.lineTo(230 + 460 * i, 430 + 260 * j);
+            ctx.strokeStyle = "#000000";
             ctx.stroke();
         }
     }
@@ -51,6 +56,7 @@ function drawLines() {
     ctx.beginPath();
     ctx.moveTo(230 + 460 * (barCount - Math.floor(barCount / 2) * 2), 200 + 260 * (Math.floor(barCount) % 4 >= 2));
     ctx.lineTo(230 + 460 * (barCount - Math.floor(barCount / 2) * 2), 430 + 260 * (Math.floor(barCount) % 4 >= 2));
+    ctx.strokeStyle = "#FF0000";
     ctx.stroke();
 }
 
@@ -61,12 +67,23 @@ function renderGame() {
 
     currentBeatCount = ellapseTime() / msPerBeat;
     for (note in musicScore) {
-        if (musicScore[note][1] < currentBeatCount - 0.1 || musicScore[note][1] >= currentBeatCount + 15)
+        if (musicScore[note][1] < currentBeatCount - 0.3 || musicScore[note][1] >= currentBeatCount + 15)
             continue;
         var barCount = musicScore[note][1] / 4.;
         var barLine = Math.floor(barCount) % 4 >= 2;
+        if (musicScore[note][1] < currentBeatCount)
+            ctx.fillStyle = "rgba(0, 0, 0, " + (1. - (currentBeatCount - musicScore[note][1]) / 0.3) + ")";
+        else
+            ctx.fillStyle = "#000000"
         drawNote(230 + 460 * (barCount - Math.floor(barCount / 2) * 2), 249 + 260 * barLine - pitchToScoreLine(musicScore[note][0]) * 7);
     }
+
+    ctx.beginPath();
+    ctx.strokeStyle = "rgba(0, 0, 0, 0.3)";
+    ctx.moveTo(0, 700);
+    for (i in fftDataArray)
+        ctx.lineTo(i * 3, 700 - fftDataArray[i] * 3.);
+    ctx.stroke();
 
     document.getElementById("scorelabel").innerText = gameScore;
 }
@@ -74,19 +91,20 @@ function renderGame() {
 // Logic Functions
 function analyseAudio() {
     var bufferLength = analyser.frequencyBinCount;
-    fftDataArray = new Float32Array(bufferLength);
-    analyser.getFloatFrequencyData(fftDataArray);
+    fftDataArray = new Uint8Array(bufferLength);
+    analyser.getByteFrequencyData(fftDataArray);
     var maxFrequency = indexToFrequency(fftDataArray.indexOf(Math.max.apply(null, fftDataArray)));
     document.title = Math.round(maxFrequency) + " Hz";
 
     var currentBeatCount = ellapseTime() / msPerBeat;
-    for (note in musicScore)
+    for (note in musicScore) {
         if (Math.abs(musicScore[note][1] - currentBeatCount) <= 0.1 &&
             frequencyToPitch(maxFrequency) == musicScore[note][0] &&
             !notePlayRecord[note]) {
             notePlayRecord[note] = true;
             gameScore += 1;
         }
+    }
 }
 
 // Main Loop
