@@ -133,3 +133,7 @@ window.onkeydown = function (event) {
             break;
     }
 }
+
+window.ontouchmove = function (event) {
+    return false;
+}
