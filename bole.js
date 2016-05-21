@@ -14,6 +14,8 @@ var musicScore = [[-3, 2], [-1, 2.5], [0, 3], [4, 3.5], [9, 4], [-3, 6], [-1, 6.
 var notePlayRecord = [];
 var gameScore = 0;
 
+var currentInterface = "welcome";
+
 // Global Functions
 function ellapseTime() {
     var endTime = new Date().getTime();
@@ -131,9 +133,17 @@ window.onkeydown = function (event) {
             gameBeginTime = new Date().getTime();
             timerEvent();
             break;
+        case 27:
+            switchInterface("welcome");
     }
 }
 
 window.ontouchmove = function (event) {
     return false;
+}
+
+function switchInterface(newInterface) {
+    document.getElementById(currentInterface).style.visibility = "hidden";
+    document.getElementById(newInterface).style.visibility = "visible";
+    currentInterface = newInterface;
 }
