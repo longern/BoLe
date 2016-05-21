@@ -44,8 +44,6 @@ function drawNote(x, y) {
 }
 
 function renderOptions() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
     ctx.lineWidth = 2;
     ctx.strokeStyle = "#000000";
     ctx.beginPath();
@@ -82,15 +80,13 @@ function drawLines() {
 
     var barCount = ellapseTime() / msPerBeat / 4;
     ctx.beginPath();
-    ctx.moveTo(230 + 460 * (barCount - Math.floor(barCount / 2) * 2), 200 + 260 * (Math.floor(barCount) % 4 >= 2));
-    ctx.lineTo(230 + 460 * (barCount - Math.floor(barCount / 2) * 2), 430 + 260 * (Math.floor(barCount) % 4 >= 2));
+    ctx.moveTo(230 + 460 * (barCount % 2), 200 + 260 * (barCount % 4 >= 2));
+    ctx.lineTo(230 + 460 * (barCount % 2), 430 + 260 * (barCount % 4 >= 2));
     ctx.strokeStyle = "#FF0000";
     ctx.stroke();
 }
 
 function renderGame() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
     drawLines();
 
     currentBeatCount = ellapseTime() / msPerBeat;
@@ -98,12 +94,20 @@ function renderGame() {
         if (musicScore[note][1] < currentBeatCount - 0.3 || musicScore[note][1] >= currentBeatCount + 15)
             continue;
         var barCount = musicScore[note][1] / 4.;
-        var barLine = Math.floor(barCount) % 4 >= 2;
+        var barLine = barCount % 4 >= 2;
+        for (var i = 5; i <= pitchToScoreLine(musicScore[note][0]); i += 2)
+        {
+            ctx.beginPath();
+            ctx.moveTo(220 + 460 * (barCount % 2), 249 + 260 * barLine - i * 7);
+            ctx.lineTo(240 + 460 * (barCount % 2), 249 + 260 * barLine - i * 7);
+            ctx.strokeStyle = "#000000";
+            ctx.stroke();
+        }
         if (musicScore[note][1] < currentBeatCount)
             ctx.fillStyle = "rgba(0, 0, 0, " + (1. - (currentBeatCount - musicScore[note][1]) / 0.3) + ")";
         else
             ctx.fillStyle = "#000000"
-        drawNote(230 + 460 * (barCount - Math.floor(barCount / 2) * 2), 249 + 260 * barLine - pitchToScoreLine(musicScore[note][0]) * 7);
+        drawNote(230 + 460 * (barCount % 2), 249 + 260 * barLine - pitchToScoreLine(musicScore[note][0]) * 7);
     }
 
     ctx.beginPath();
@@ -163,6 +167,7 @@ function analyseAudio() {
 // Main Loop
 function timerEvent() {
     analyseAudio();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     if (currentInterface == "options")
         renderOptions();
     else if(currentInterface == "playing")
@@ -200,4 +205,6 @@ function switchInterface(newInterface) {
     document.getElementById(currentInterface).style.visibility = "hidden";
     document.getElementById(newInterface).style.visibility = "visible";
     currentInterface = newInterface;
+    gameBeginTime = new Date().getTime();
+    timerEvent();
 }
