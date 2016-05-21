@@ -45,3 +45,8 @@ body
 {
     visibility: hidden;
 }
+
+#cmain
+{
+    pointer-events: none;
+}
