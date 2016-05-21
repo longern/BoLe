@@ -15,6 +15,7 @@ var notePlayRecord = [];
 var gameScore = 0;
 
 var currentInterface = "welcome";
+var globalOffset = 80;
 
 // Global Functions
 function ellapseTime() {
@@ -40,6 +41,31 @@ function drawNote(x, y) {
     ctx.beginPath();
     ctx.ellipse(x, y, 9, 7, -25 * Math.PI / 180, 0, 2 * Math.PI);
     ctx.fill();
+}
+
+function renderOptions() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = "#000000";
+    ctx.beginPath();
+    ctx.moveTo(210 + 230, 200);
+    ctx.lineTo(210 + 230, 430);
+    ctx.stroke();
+
+    if (optionLastHit != 0.) {
+        ctx.beginPath();
+        ctx.moveTo(210 + 920 * optionLastHit, 200);
+        ctx.lineTo(210 + 920 * optionLastHit, 430);
+        ctx.stroke();
+    }
+
+    ctx.strokeStyle = "#FF0000";
+    var barCount = ellapseTime() / msPerBeat / 4;
+    ctx.beginPath();
+    ctx.moveTo(210 + 920 * (barCount % 1), 200);
+    ctx.lineTo(210 + 920 * (barCount % 1), 430);
+    ctx.stroke();
 }
 
 function drawLines() {
@@ -91,14 +117,22 @@ function renderGame() {
 }
 
 // Logic Functions
-function analyseAudio() {
-    var bufferLength = analyser.frequencyBinCount;
-    fftDataArray = new Uint8Array(bufferLength);
-    analyser.getByteFrequencyData(fftDataArray);
+var optionLastHit = 0.;
+function analyseOptions() {
     var maxFrequency = indexToFrequency(fftDataArray.indexOf(Math.max.apply(null, fftDataArray)));
     document.title = Math.round(maxFrequency) + " Hz";
+    
+    var barCount = (ellapseTime() - globalOffset) / msPerBeat / 4;
+    if (barCount % 1 >= 0.9)
+        optionLastHit = 0.;
+    if (frequencyToPitch(maxFrequency) == -3 && optionLastHit == 0. && barCount % 1 <= 0.5)
+        optionLastHit = barCount % 1;
+}
 
-    var currentBeatCount = ellapseTime() / msPerBeat;
+function analysePlaying() {
+    var maxFrequency = indexToFrequency(fftDataArray.indexOf(Math.max.apply(null, fftDataArray)));
+    document.title = Math.round(maxFrequency) + " Hz";
+    var currentBeatCount = (ellapseTime() - globalOffset) / msPerBeat;
     for (note in musicScore) {
         if (Math.abs(musicScore[note][1] - currentBeatCount) <= 0.1 &&
             frequencyToPitch(maxFrequency) == musicScore[note][0] &&
@@ -109,10 +143,30 @@ function analyseAudio() {
     }
 }
 
+function analyseAudio() {
+    var bufferLength = analyser.frequencyBinCount;
+    fftDataArray = new Uint8Array(bufferLength);
+    analyser.getByteFrequencyData(fftDataArray);
+
+    switch (currentInterface) {
+        case "welcome":
+            break;
+        case "options":
+            analyseOptions();
+            break;
+        case "playing":
+            analysePlaying();
+            break;
+    }
+}
+
 // Main Loop
 function timerEvent() {
     analyseAudio();
-    renderGame();
+    if (currentInterface == "options")
+        renderOptions();
+    else if(currentInterface == "playing")
+        renderGame();
     setTimeout(timerEvent, 0);
 }
 
