@@ -34,3 +34,14 @@ body
 {
     position: absolute;
 }
+
+.full
+{
+    width: 1280px;
+    height: 800px;
+}
+
+.hidden
+{
+    visibility: hidden;
+}
