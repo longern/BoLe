@@ -4,10 +4,10 @@ navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia 
 var audioCtx = new AudioContext();
 var analyser = audioCtx.createAnalyser();
 var ctx = null;
-analyser.minDecibels = -90;
+analyser.minDecibels = -80;
 analyser.maxDecibels = -10;
 analyser.fftSize = 2048;
-analyser.smoothingTimeConstant = 0.1;
+analyser.smoothingTimeConstant = 0.;
 
 var msPerBeat = 60000 / 110.;
 var musicScore = [[-3, 2], [-1, 2.5], [0, 3], [4, 3.5], [9, 4], [-3, 6], [-1, 6.5], [0, 7], [4, 7.5], [9, 8], [14, 10], [12, 10.5], [11, 11], [12, 11.5], [9, 12], [-3, 18], [-1, 18.5], [0, 19], [4, 19.5], [9, 20], [-3, 22], [-1, 22.5], [0, 23], [4, 23.5], [9, 24], [14, 26], [12, 26.5], [11, 27], [12, 27.5], [9, 28]];
