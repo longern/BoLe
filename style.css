@@ -50,3 +50,13 @@ body
 {
     pointer-events: none;
 }
+
+input[type="text"]
+{
+    font-family: 'Lucida Handwriting';
+    font-size: 28px;
+    border: none;
+    background: rgba(127, 127, 127, 0.4);
+    height: 36px;
+    width: 250px;
+}

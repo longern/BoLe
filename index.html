@@ -17,8 +17,10 @@
             <div style="width:400px; left:440px; top:330px; text-align:center;" onclick="switchInterface('options')">Options</div>
         </div>
         <div id="options" class="full hidden">
-            <input id="editoffset" type="text" style="left:100px; top:500px;" value="80" onchange="globalOffset = parseInt(this.value);"/>
-            <input id="editscale" type="text" style="left:400px; top:500px;" value="1.0" onchange="document.getElementById('screen').style.transform = 'scale(' + parseFloat(this.value) + ')';"/>
+            <label style="left:80px; top:500px;">Offset</label>
+            <input id="editoffset" type="text" style="left:200px; top:500px;" value="80" onchange="globalOffset = parseInt(this.value);"/>
+            <label style="left:680px; top:500px;">Scale</label>
+            <input id="editscale" type="text" style="left:800px; top:500px;" value="1.0" onchange="document.getElementById('screen').style.transform = 'scale(' + parseFloat(this.value) + ')';"/>
         </div>
         <div id="playing" class="full hidden">
             <div id="songtitlelable" style="left:0; top:100px; width:1280px; text-align:center;">Song Title</div>
