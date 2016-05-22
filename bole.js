@@ -105,6 +105,8 @@ function renderGame() {
         ctx.stroke();
         if (musicScore[note][1] < currentBeatCount)
             ctx.fillStyle = "rgba(0, 0, 0, " + (1. - (currentBeatCount - musicScore[note][1]) / 0.3) + ")";
+        else if (musicScore[note][1] >= currentBeatCount + 14.7)
+            ctx.fillStyle = "rgba(0, 0, 0, " + ((currentBeatCount + 15 - musicScore[note][1]) / 0.3) + ")";
         else
             ctx.fillStyle = "#000000"
         drawNote(230 + 460 * (barCount % 2), 249 + 260 * barLine - pitchToScoreLine(musicScore[note][0]) * 7);
