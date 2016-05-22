@@ -68,21 +68,21 @@ function renderOptions() {
 
 function drawLines() {
     ctx.lineWidth = 2;
+    ctx.strokeStyle = "#000000";
+    ctx.beginPath();
     for (var i = 0; i < 3; i++) {
         for (var j = 0; j < 2; j++) {
-            ctx.beginPath();
             ctx.moveTo(230 + 460 * i, 200 + 260 * j);
             ctx.lineTo(230 + 460 * i, 430 + 260 * j);
-            ctx.strokeStyle = "#000000";
-            ctx.stroke();
         }
     }
+    ctx.stroke();
 
     var barCount = ellapseTime() / msPerBeat / 4;
+    ctx.strokeStyle = "#FF0000";
     ctx.beginPath();
     ctx.moveTo(230 + 460 * (barCount % 2), 200 + 260 * (barCount % 4 >= 2));
     ctx.lineTo(230 + 460 * (barCount % 2), 430 + 260 * (barCount % 4 >= 2));
-    ctx.strokeStyle = "#FF0000";
     ctx.stroke();
 }
 
@@ -95,14 +95,14 @@ function renderGame() {
             continue;
         var barCount = musicScore[note][1] / 4.;
         var barLine = barCount % 4 >= 2;
+        ctx.beginPath();
+        ctx.strokeStyle = "#000000";
         for (var i = 5; i <= pitchToScoreLine(musicScore[note][0]); i += 2)
         {
-            ctx.beginPath();
             ctx.moveTo(220 + 460 * (barCount % 2), 249 + 260 * barLine - i * 7);
             ctx.lineTo(240 + 460 * (barCount % 2), 249 + 260 * barLine - i * 7);
-            ctx.strokeStyle = "#000000";
-            ctx.stroke();
         }
+        ctx.stroke();
         if (musicScore[note][1] < currentBeatCount)
             ctx.fillStyle = "rgba(0, 0, 0, " + (1. - (currentBeatCount - musicScore[note][1]) / 0.3) + ")";
         else
