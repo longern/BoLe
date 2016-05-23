@@ -1,5 +1,5 @@
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
-navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+navigator.getUserMedia = navigator.mediaDevices.getUserMedia || navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
 
 var audioCtx = new AudioContext();
 var analyser = audioCtx.createAnalyser();
@@ -10,7 +10,7 @@ analyser.fftSize = 2048;
 analyser.smoothingTimeConstant = 0.;
 
 var msPerBeat = 60000 / 72.;
-var musicScore = [[4, 0], [2, 3], [0, 3.5], [4, 4], [7, 6], [4, 7], [2, 8], [-5, 11], [-3, 11.5], [2, 12], [-5, 14], [-3, 15], [4, 16], [2, 19], [0, 19.5], [4, 20], [7, 22], [9, 23], [2, 24], [-3, 27], [-5, 28], [-5, 31], [-3, 31.5], [0, 32], [4, 33], [2, 34], [-3, 35], [-5, 36], [-5, 39], [-3, 39.5], [0, 40], [4, 41], [2, 42], [0, 43], [4, 44], [7, 47], [9, 47.5], [4, 48], [7, 49], [4, 49.5], [2, 50], [0, 51], [2, 51.5], [4, 52], [7, 53], [4, 54], [-3, 55], [0, 55.5], [2, 56], [4, 57.5], [7, 58], [4, 59], [0, 60]];
+var musicScore = [[4, 4], [2, 7], [0, 7.5], [4, 8], [7, 10], [4, 11], [2, 12], [-5, 15], [-3, 15.5], [2, 16], [-5, 18], [-3, 19], [4, 20], [2, 23], [0, 23.5], [4, 24], [7, 26], [9, 27], [2, 28], [-3, 31], [-5, 32], [-5, 35], [-3, 35.5], [0, 36], [4, 37], [2, 38], [-3, 39], [-5, 40], [-5, 43], [-3, 43.5], [0, 44], [4, 45], [2, 46], [0, 47], [4, 48], [7, 51], [9, 51.5], [4, 52], [7, 53], [4, 53.5], [2, 54], [0, 55], [2, 55.5], [4, 56], [7, 57], [4, 58], [-3, 59], [0, 59.5], [2, 60], [4, 61.5], [7, 62], [4, 63], [0, 64]];
 var notePlayRecord = [];
 var gameScore = 0;
 
