@@ -1,5 +1,5 @@
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
-navigator.getUserMedia = navigator.mediaDevices.getUserMedia || navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
 
 var audioCtx = new AudioContext();
 var analyser = audioCtx.createAnalyser();
@@ -39,7 +39,10 @@ function pitchToScoreLine(pitch) {
 // Render Functions
 function drawNote(x, y) {
     ctx.beginPath();
-    ctx.ellipse(x, y, 9, 7, -25 * Math.PI / 180, 0, 2 * Math.PI);
+    if (ctx.ellipse)
+        ctx.ellipse(x, y, 9, 7, -25 * Math.PI / 180, 0, 2 * Math.PI);
+    else
+        ctx.arc(x, y, 7, 0, Math.PI * 2);
     ctx.fill();
 }
 
